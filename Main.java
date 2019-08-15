@@ -13,11 +13,12 @@ public class Main {
 	private final static int WIDTH = 1200;
 	private final static int HEIGHT = 800;
 	
-	static boolean running = true;
-	static double fps;
+	private static boolean running = true;
+	private static double fps;
 	
-	static object[] objects = new object[1000];
-	static projectile[] projectiles = new projectile[100];
+	private static object[] objects = new object[1000];
+	private static projectile[] projectiles = new projectile[100];
+	private static boolean[] availability = new boolean[100];
 	
 	static class object {
 		int id, x, y, height, width;
@@ -90,7 +91,7 @@ public class Main {
 	static class enemy1 extends enemy {
 		enemy1() {
 			super();
-			colour = Color.GREEN;
+			colour = Color.CYAN;
 		}
 	}
 	static class enemy2 extends enemy {
@@ -102,17 +103,24 @@ public class Main {
 	static class enemy3 extends enemy {
 		enemy3() {
 			super();
-			colour = Color.CYAN;
+			colour = Color.GREEN;
 		}
 	}
 	static class projectile extends object{}
+	static class barrier extends object{
+		barrier() {
+			width = 64;
+			height = 32;
+			colour = Color.RED;
+		}
+	}
 	
 	public static void main(String[] args) {
 		JFrame window;
 		JPanel panel;
 		Graphics g;
 		
-		window = new JFrame("Evan's Gay Wank Shitty Space Invaders");
+		window = new JFrame("Space Invaders");
 		panel = new JPanel();
 		
 		panel.setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -126,14 +134,13 @@ public class Main {
 		
 		g = panel.getGraphics();
 		
-		player p = new player();
-		
-		objects[0] = p;
+		setup();
 				
 		while (running) {
 			long lastTime = System.nanoTime();
 			
-			update(g);
+			updateGame();
+			updateGraphics(g);
 			
 			System.out.println();
 			
@@ -143,7 +150,10 @@ public class Main {
 		System.exit(0);
 	}
 	
-	private static void update(Graphics g) {
+	private static void updateGame() {
+		
+	}
+	private static void updateGraphics(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
 		
 		BufferedImage image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_ARGB);
@@ -163,5 +173,72 @@ public class Main {
 		imageGraphics.drawString("FPS: " + String.valueOf((int)fps), 16, 16);
 		
 		g2d.drawImage(image, 0, 0, null);
+	}
+	private static void setup() {
+		for (int i = 0; i < 100; i++) {
+			availability[i] = true;
+		}
+		
+		player p = new player();
+		objects[0] = p;
+		
+		barrier b = new barrier();
+		b.setX((WIDTH/5)-(b.getWidth()/2));
+		b.setY(HEIGHT-200);
+		objects[1] = b;
+		
+		b = new barrier();
+		b.setX((2*WIDTH/5)-(b.getWidth()/2));
+		b.setY(HEIGHT-200);
+		objects[2] = b;
+		
+		b = new barrier();
+		b.setX((3*WIDTH/5)-(b.getWidth()/2));
+		b.setY(HEIGHT-200);
+		objects[3] = b;
+		
+		b = new barrier();
+		b.setX((4*WIDTH/5)-(b.getWidth()/2));
+		b.setY(HEIGHT-200);
+		objects[4] = b;
+		
+		int count = 5;
+		
+		for (int j = 1; j < 3; j++) {
+			for (int i = 0; i < 12; i++) {
+				enemy e = new enemy1();
+				e.setX(((i+1)*WIDTH/13)-(e.getWidth()/2));
+				e.setY((j+1)*64);
+				count++;
+				objects[count] = e;
+			}
+		}
+		
+		for (int j = 3; j < 5; j++) {
+			for (int i = 0; i < 12; i++) {
+				enemy e = new enemy2();
+				e.setX(((i+1)*WIDTH/13)-(e.getWidth()/2));
+				e.setY((j+1)*64);
+				count++;
+				objects[count] = e;
+			}
+		}
+		
+		for (int i = 0; i < 12; i++) {
+			enemy e = new enemy3();
+			e.setX(((i+1)*WIDTH/13)-(e.getWidth()/2));
+			e.setY(64);
+			count++;
+			objects[count] = e;
+		}
+	}
+	private static void createProjectile(boolean player, int x, int y) {
+		int count = 0;
+		for (boolean b : availability) {
+			if (b) {
+				projectiles[count] = new projectile();
+			}
+			count++;
+		}
 	}
 }

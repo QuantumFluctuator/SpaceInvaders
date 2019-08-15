@@ -17,6 +17,7 @@ public class Main {
 	static double fps;
 	
 	static object[] objects = new object[1000];
+	static projectile[] projectiles = new projectile[100];
 	
 	static class object {
 		int id, x, y, height, width;
@@ -70,7 +71,6 @@ public class Main {
 			this.colour = colour;
 		}
 	}
-	
 	static class player extends object {
 		player() {
 			width = 64;
@@ -81,34 +81,31 @@ public class Main {
 			id = 0;
 		}
 	}
-	
 	static class enemy extends object {
 		enemy() {
 			width = 32;
 			height = 32;
 		}
 	}
-	
 	static class enemy1 extends enemy {
 		enemy1() {
 			super();
 			colour = Color.GREEN;
 		}
 	}
-	
 	static class enemy2 extends enemy {
 		enemy2() {
 			super();
 			colour = Color.BLUE;
 		}
 	}
-	
 	static class enemy3 extends enemy {
 		enemy3() {
 			super();
 			colour = Color.CYAN;
 		}
 	}
+	static class projectile extends object{}
 	
 	public static void main(String[] args) {
 		JFrame window;

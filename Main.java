@@ -12,16 +12,21 @@ import javax.swing.JPanel;
 public class Main {
 	private final static int WIDTH = 1200;
 	private final static int HEIGHT = 800;
+	private final static int OBJECTS = 100;
+	private final static int PROJECTILES = 25;
+	
+	private static double baseSpeed = 0.15;
 	
 	private static boolean running = true;
 	private static double fps;
 	
-	private static object[] objects = new object[1000];
-	private static projectile[] projectiles = new projectile[100];
-	private static boolean[] availability = new boolean[100];
+	private static object[] objects = new object[OBJECTS];
+	private static projectile[] projectiles = new projectile[PROJECTILES];
+	private static boolean[] availability = new boolean[PROJECTILES];
 	
 	static class object {
-		int id, x, y, height, width;
+		int id, height, width;
+		double x, y, xsp, ysp;
 		Color colour;
 		
 		public void setID(int id) {
@@ -32,20 +37,36 @@ public class Main {
 			return id;
 		}
 		
-		public void setX(int x) {
+		public void setX(double x) {
 			this.x = x;
 		}
 		
-		public int getX() {
+		public double getX() {
 			return x;
 		}
 		
-		public void setY(int y) {
+		public void setY(double y) {
 			this.y = y;
 		}
 		
-		public int getY() {
+		public double getY() {
 			return y;
+		}
+		
+		public void setXsp(double xsp) {
+			this.xsp = xsp;
+		}
+		
+		public double getXsp() {
+			return xsp;
+		}
+		
+		public void setYsp(double ysp) {
+			this.ysp = ysp;
+		}
+		
+		public double getYsp() {
+			return ysp;
 		}
 		
 		public int getWidth() {
@@ -151,7 +172,11 @@ public class Main {
 	}
 	
 	private static void updateGame() {
-		
+		for (object o : objects) {
+			if (o != null) {
+				o.setX(o.getX()+o.getXsp());
+			}
+		}
 	}
 	private static void updateGraphics(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
@@ -165,7 +190,7 @@ public class Main {
 		for (object o : objects) {
 			if (o != null) {
 				imageGraphics.setColor(o.getColour());
-				imageGraphics.fillRect(o.getX(), o.getY(), o.getWidth(), o.getHeight());
+				imageGraphics.fillRect((int)o.getX(), (int)o.getY(), o.getWidth(), o.getHeight());
 			}
 		}
 		
@@ -175,7 +200,7 @@ public class Main {
 		g2d.drawImage(image, 0, 0, null);
 	}
 	private static void setup() {
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < PROJECTILES; i++) {
 			availability[i] = true;
 		}
 		
@@ -209,6 +234,7 @@ public class Main {
 				enemy e = new enemy1();
 				e.setX(((i+1)*WIDTH/13)-(e.getWidth()/2));
 				e.setY((j+1)*64);
+				e.setXsp(baseSpeed);
 				count++;
 				objects[count] = e;
 			}
@@ -219,6 +245,7 @@ public class Main {
 				enemy e = new enemy2();
 				e.setX(((i+1)*WIDTH/13)-(e.getWidth()/2));
 				e.setY((j+1)*64);
+				e.setXsp(baseSpeed);
 				count++;
 				objects[count] = e;
 			}
@@ -228,6 +255,7 @@ public class Main {
 			enemy e = new enemy3();
 			e.setX(((i+1)*WIDTH/13)-(e.getWidth()/2));
 			e.setY(64);
+			e.setXsp(baseSpeed);
 			count++;
 			objects[count] = e;
 		}

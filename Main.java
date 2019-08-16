@@ -184,6 +184,12 @@ public class Main {
 				}
 			}
 		}
+		for (projectile p : projectiles) {
+			if (p != null) {
+				p.setX(p.getX()+p.getXsp());
+				p.setY(p.getY()+p.getYsp());
+			}
+		}
 	}
 	private static void updateGraphics(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
@@ -198,6 +204,13 @@ public class Main {
 			if (o != null) {
 				imageGraphics.setColor(o.getColour());
 				imageGraphics.fillRect((int)o.getX(), (int)o.getY(), o.getWidth(), o.getHeight());
+			}
+		}
+		
+		for (projectile p : projectiles) {
+			if (p != null) {
+				imageGraphics.setColor(p.getColour());
+				imageGraphics.fillRect((int)p.getX(), (int)p.getY(), p.getWidth(), p.getHeight());
 			}
 		}
 		

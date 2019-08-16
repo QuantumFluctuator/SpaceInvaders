@@ -15,7 +15,7 @@ public class Main {
 	private final static int OBJECTS = 100;
 	private final static int PROJECTILES = 25;
 	
-	private static double baseSpeed = 0.15;
+	private final static double baseSpeed = 0.15;
 	
 	private static boolean running = true;
 	private static double fps;
@@ -172,9 +172,16 @@ public class Main {
 	}
 	
 	private static void updateGame() {
+		if (playerShotFired()) {
+			createProjectile(true, (int)objects[0].getX(), (int)objects[0].getY());
+		}
 		for (object o : objects) {
 			if (o != null) {
 				o.setX(o.getX()+o.getXsp());
+				o.setY(o.getY()+o.getYsp());
+				if (enemyShotFired() && o.getID() >= 5) {
+					createProjectile(false, (int)o.getX(), (int)o.getY());
+				}
 			}
 		}
 	}
@@ -268,5 +275,11 @@ public class Main {
 			}
 			count++;
 		}
+	}
+	private static boolean playerShotFired() {
+		return true;	//TODO: conditions for player to fire shot
+	}
+	private static boolean enemyShotFired() {
+		return false;	//TODO: conditions for enemy shots fired
 	}
 }
